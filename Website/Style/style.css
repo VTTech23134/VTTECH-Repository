@@ -60,3 +60,73 @@ nav a:hover {
   color: var(--navbar-hover);
   transition: color 0.12s ease-in;
 }
+
+.team-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 8%;
+}
+
+.team-section h1 {
+  color: var(--title);
+  margin: 0 0 32px;
+  text-align: center;
+}
+
+.team-group {
+  margin-bottom: 48px;
+}
+
+.team-group h2 {
+  color: var(--title);
+  margin: 0 0 24px;
+  text-align: center;
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.coaches-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.team-card {
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(11, 19, 32, 0.08);
+}
+
+.team-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: center 20%;
+}
+
+.team-card h3 {
+  margin: 0;
+  padding: 18px 12px;
+  color: var(--title);
+  font-size: 1.15rem;
+}
+
+@media (max-width: 900px) {
+  .team-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .team-grid {
+    grid-template-columns: 1fr;
+  }
+}
