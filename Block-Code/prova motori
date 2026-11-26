@@ -1,0 +1,62 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+
+@TeleOp(name = "Test: frontLeftMotor", group = "Test")
+public class TestFrontLeftMotor extends LinearOpMode {
+
+    private DcMotor frontLeftMotor;
+
+    @Override
+    public void runOpMode() {
+        // 1. Mappatura hardware: deve corrispondere esattamente al nome nella configurazione
+        frontLeftMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
+
+        // Imposta la modalità per leggere l'encoder e frenare quando la potenza è 0
+        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        telemetry.addData("Stato", "Pronto per il test. Premi Play.");
+        telemetry.update();
+
+        waitForStart();
+
+        double potenza = 0.0;
+        double incremento = 0.01;
+        boolean inAumento = true;
+
+        while (opModeIsActive()) {
+            // 2. Calcola la rampa di velocità da -1.0 a +1.0
+            if (inAumento) {
+                potenza += incremento;
+                if (potenza >= 1.0) {
+                    potenza = 1.0;
+                    inAumento = false;
+                }
+            } else {
+                potenza -= incremento;
+                if (potenza <= -1.0) {
+                    potenza = -1.0;
+                    inAumento = true;
+                }
+            }
+
+            // 3. Applica la potenza al motore
+            frontLeftMotor.setPower(potenza);
+
+            // 4. Mostra i dati sulla Driver Station
+            telemetry.addData("Potenza attuale", "%.2f", potenza);
+            telemetry.addData("Posizione Encoder (tick)", frontLeftMotor.getCurrentPosition());
+            telemetry.update();
+
+            // Piccola pausa per rendere la rampa fluida e leggibile
+            sleep(30);
+        }
+
+        // Ferma il motore alla fine del test
+        frontLeftMotor.setPower(0);
+    }
+}
