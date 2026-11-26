@@ -29,6 +29,7 @@ body {
 }
 
 header {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -61,6 +62,96 @@ nav a[aria-current="page"] {
 nav a:hover {
   color: var(--navbar-hover);
   transition: color 0.12s ease-in;
+}
+
+.mobile-menu {
+  display: none;
+}
+
+.mobile-menu summary {
+  display: block;
+  cursor: pointer;
+  list-style: none;
+  padding: 8px;
+}
+
+.mobile-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.hamburger-icon {
+  position: relative;
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: currentColor;
+}
+
+.hamburger-icon::before,
+.hamburger-icon::after {
+  position: absolute;
+  left: 0;
+  width: 24px;
+  height: 2px;
+  background: currentColor;
+  content: "";
+}
+
+.hamburger-icon::before {
+  top: -7px;
+}
+
+.hamburger-icon::after {
+  top: 7px;
+}
+
+.mobile-menu[open] .hamburger-icon {
+  background: transparent;
+}
+
+.mobile-menu[open] .hamburger-icon::before {
+  top: 0;
+  transform: rotate(45deg);
+}
+
+.mobile-menu[open] .hamburger-icon::after {
+  top: 0;
+  transform: rotate(-45deg);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+.mobile-menu nav {
+  position: absolute;
+  z-index: 1;
+  top: 100%;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  width: min(240px, calc(100vw - 32px));
+  padding: 8px 0;
+  background: var(--navbar);
+  border: 1px solid var(--border);
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 12px rgba(11, 19, 32, 0.18);
+}
+
+.mobile-menu nav a {
+  display: block;
+  margin: 0;
+  padding: 12px 20px;
+}
+
+.mobile-menu nav a + a {
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .site-footer {
@@ -222,6 +313,25 @@ nav a:hover {
   .robot-feature {
     grid-template-columns: 1fr;
     gap: 28px;
+  }
+}
+
+@media (max-width: 610px) {
+  header {
+    padding: 16px 6%;
+  }
+
+  .logo {
+    font-size: 2.25rem;
+  }
+
+  .desktop-nav {
+    display: none;
+  }
+
+  .mobile-menu {
+    display: block;
+    color: var(--navbar-text);
   }
 }
 
