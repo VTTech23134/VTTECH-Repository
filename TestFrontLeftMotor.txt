@@ -1,0 +1,55 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+
+@TeleOp(name = "Test: frontLeftMotor", group = "Test")
+public class TestFrontLeftMotor extends LinearOpMode {
+
+    private DcMotor frontLeftMotor;
+
+    @Override
+    public void runOpMode() {
+        // Verifica che il nome corrisponda esattamente alla configurazione del Robot Controller
+        frontLeftMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
+
+        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeftMotor.setPower(0.0);
+
+        telemetry.addData("Stato", "Pronto per il test. Premi Play.");
+        telemetry.update();
+
+        waitForStart();
+
+        double potenza = 0.0;
+        double incremento = 0.01;
+        boolean inAumento = true;
+
+        while (opModeIsActive()) {
+            if (inAumento) {
+                potenza = Math.min(1.0, potenza + incremento);
+                if (potenza >= 1.0) {
+                    inAumento = false;
+                }
+            } else {
+                potenza = Math.max(-1.0, potenza - incremento);
+                if (potenza <= -1.0) {
+                    inAumento = true;
+                }
+            }
+
+            frontLeftMotor.setPower(potenza);
+
+            telemetry.addData("Potenza attuale", "%.2f", potenza);
+            telemetry.addData("Posizione Encoder (tick)", frontLeftMotor.getCurrentPosition());
+            telemetry.update();
+
+            sleep(30);
+        }
+
+        frontLeftMotor.setPower(0.0);
+    }
+}

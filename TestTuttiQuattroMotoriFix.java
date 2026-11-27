@@ -1,0 +1,81 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
+@TeleOp(name = "Test: Tutti i 4 Motori Insieme", group = "Test")
+public class TestTuttiQuattroMotoriFix extends LinearOpMode {
+
+    private DcMotor frontLeftMotor;
+    private DcMotor frontRightMotor;
+    private DcMotor backRightMotor;
+    private DcMotor backLeftMotor;
+
+    @Override
+    public void runOpMode() {
+        // Verifica che i nomi corrispondano esattamente alla configurazione del Robot Controller
+        frontLeftMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
+        frontRightMotor = hardwareMap.get(DcMotor.class, "frontRightMotor");
+        backRightMotor = hardwareMap.get(DcMotor.class, "backRightMotor");
+        backLeftMotor = hardwareMap.get(DcMotor.class, "backLeftMotor");
+
+        // Imposta le direzioni in base al montaggio fisico dei motori
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        DcMotor[] motors = {frontLeftMotor, frontRightMotor, backRightMotor, backLeftMotor};
+
+        for (DcMotor m : motors) {
+            m.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            m.setPower(0.0);
+        }
+
+        telemetry.addData("Stato", "Pronto. Tieni il robot sollevato e premi Play.");
+        telemetry.update();
+
+        waitForStart();
+
+        double potenza = 0.0;
+        double incremento = 0.01;
+        boolean inAumento = true;
+
+        while (opModeIsActive()) {
+            if (inAumento) {
+                potenza = Math.min(0.5, potenza + incremento);
+                if (potenza >= 0.5) {
+                    inAumento = false;
+                }
+            } else {
+                potenza = Math.max(-0.5, potenza - incremento);
+                if (potenza <= -0.5) {
+                    inAumento = true;
+                }
+            }
+
+            // Applica la stessa potenza a tutti e quattro i motori
+            for (DcMotor m : motors) {
+                m.setPower(potenza);
+            }
+
+            telemetry.addData("Potenza attuale", "%.2f", potenza);
+            telemetry.addData("Encoder FL", frontLeftMotor.getCurrentPosition());
+            telemetry.addData("Encoder FR", frontRightMotor.getCurrentPosition());
+            telemetry.addData("Encoder BR", backRightMotor.getCurrentPosition());
+            telemetry.addData("Encoder BL", backLeftMotor.getCurrentPosition());
+            telemetry.update();
+
+            sleep(30);
+        }
+
+        // Ferma tutti i motori all'uscita dal ciclo
+        for (DcMotor m : motors) {
+            m.setPower(0.0);
+        }
+    }
+}
